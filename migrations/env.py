@@ -1,3 +1,5 @@
+import os
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -5,6 +7,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from app.models.base import Base
+
 
 # this is the Alembic Confisg object, which provides
 # access to the values within the .ini file in use.
@@ -53,12 +56,18 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode.
+    # Получаем параметры подключения из переменных окружения
+    db_host = os.getenv("DB_HOST", "localhost")
+    db_port = os.getenv("DB_PORT", "5432")
+    db_name = os.getenv("DB_NAME", "achievements_db")
+    db_user = os.getenv("DB_USER", "postgres")
+    db_password = os.getenv("DB_PASSWORD", "postgres")
+    
+    database_url = f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    
+    # Устанавливаем URL в конфигурации Alembic
+    config.set_main_option("sqlalchemy.url", database_url)
 
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-
-    """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",

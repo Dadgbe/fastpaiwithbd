@@ -1,7 +1,4 @@
-from sqlalchemy.orm import declarative_base
-
-Base = declarative_base()
-
+from .base import Base
 from .user import User
 from .achievement import Achievement
 from .achievement_translation import AchievementTranslation
