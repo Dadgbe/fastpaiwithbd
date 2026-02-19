@@ -13,6 +13,11 @@ class AchievementService:
 
     async def get_achievement(self, achievement_id: int) -> Achievement | None:
         return await self.db.get(Achievement, achievement_id)
+    
+    async def get_all_achievements_full(self) -> List[Achievement]:
+        stmt = select(Achievement).options(selectinload(Achievement.translations)).order_by(Achievement.id)
+        result = await self.db.execute(stmt)
+        return result.scalars().all()
 
     async def create_achievement(self, ach_data: AchievementCreate) -> Achievement:
         # Создаём достижение
@@ -30,7 +35,7 @@ class AchievementService:
             )
             self.db.add(translation)
         await self.db.commit()
-        await self.db.refresh(achievement)
+        await self.db.refresh(achievement, attribute_names=["translations"])
         return achievement
 
     async def get_all_achievements(self, lang: UserLanguage = UserLanguage.en) -> List[AchievementLocalized]:

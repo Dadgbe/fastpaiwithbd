@@ -1,3 +1,6 @@
+
+from __future__ import annotations
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, insert, and_
 from app.models.user_achievement import UserAchievement
