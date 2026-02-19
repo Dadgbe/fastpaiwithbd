@@ -1,5 +1,8 @@
-from pydantic import BaseModel, ConfigDict
+from __future__ import annotations
 from datetime import datetime
+from pydantic import BaseModel, ConfigDict
+# Добавляем прямой импорт нужного класса
+from app.schemas.achievement import AchievementLocalized
 
 class UserAchievementBase(BaseModel):
     user_id: int
@@ -16,4 +19,4 @@ class UserAchievement(UserAchievementBase):
 # Расширенный ответ с локализованным достижением
 class UserAchievementWithDetails(BaseModel):
     awarded_at: datetime
-    achievement: "app.schemas.achievement.AchievementLocalized"
+    achievement: AchievementLocalized  # теперь тип определён
